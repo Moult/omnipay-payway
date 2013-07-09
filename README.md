@@ -1,6 +1,6 @@
-# VLibrary
+# vlibrary
 
-VLibrary is a minimal jumpstart for small BDD library development with PHPSpec
+vlibrary is a minimal jumpstart for small BDD library development with PHPSpec
 and Phing.
 
 # Get started immediately

@@ -1,13 +1,40 @@
 {
+    "name": "moult/omnipay-payway",
+    "type": "library",
+    "description": "Westpac PayWay gateway for Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "payway",
+        "westpac",
+        "purchase"
+    ],
+    "homepage": "https://github.com/Moult/omnipay-payway",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dion Moult",
+            "email": "dion@thinkmoult.com"
+        }
+    ],
     "config": {
         "bin-dir": "bin/"
     },
+    "autoload": {
+        "psr-0": { "Omnipay\\Payway\\" : "src/" }
+    },
     "require": {
-        "php": ">=5.4.0"
+        "omnipay/common": "~2.0"
     },
     "require-dev": {
-        "phpspec/phpspec": "2.0.*@dev"
+        "omnipay/tests": "~2.0"
     },
-    "autoload": {"psr-0": {"": "src"}},
-    "minimum-stability": "dev"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
 }

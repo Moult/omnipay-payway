@@ -2,37 +2,11 @@
 
 namespace Omnipay\Payway\Message;
 
-class PurchaseRequest extends AbstractRequest
+use Omnipay\Common\Message\RequestInterface;
+
+class PurchaseRequest extends AbstractRequest implements RequestInterface
 {
-    public function getUsername()
-    {
-        return $this->getParameter('username');
-    }
-
-    public function setUsername($username)
-    {
-        return $this->setParameter('username', $username);
-    }
-
-    public function getPassword()
-    {
-        return $this->getParameter('password');
-    }
-
-    public function setPassword($password)
-    {
-        return $this->setParameter('password', $password);
-    }
-
-    public function getMerchant()
-    {
-        return $this->getParameter('merchant');
-    }
-
-    public function setMerchant($merchant)
-    {
-        return $this->setParameter('merchant', $merchant);
-    }
+    protected $url = 'https://ccapi.client.qvalent.com/payway/ccapi';
 
     public function getData()
     {
@@ -51,8 +25,9 @@ class PurchaseRequest extends AbstractRequest
         $card = $this->getCard();
         $data['card.PAN'] = $card->getNumber();
         $data['card.CVN'] = $card->getCvv();
-        $data['card.expiryYear'] = $card->getExpiryDate('Y');
+        $data['card.expiryYear'] = $card->getExpiryDate('y');
         $data['card.expiryMonth'] = $card->getExpiryDate('m');
+        $data['card.cardHolderName'] = $card->getFirstName().' '.$card->getLastName();
 
         $data['card.currency'] = $this->getCurrency();
         $data['order.amount'] = $this->getAmountInteger();
@@ -63,36 +38,20 @@ class PurchaseRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        var_dump('data');
-        die();
-        $orderNumber = $data['customer.orderNumber'];
+        $options = array(
+            'timeout' => 60,
+            'connect_timeout' => 60,
+            'cert' => $this->getCertificate()
+        );
 
-        $this->url = 'https://ccapi.client.qvalent.com/payway/ccapi';
-        $ch = curl_init( $this->url );
-        curl_setopt( $ch, CURLOPT_POST,true );
-        curl_setopt( $ch, CURLOPT_FAILONERROR, true );
-        curl_setopt( $ch, CURLOPT_FORBID_REUSE, true );
-        curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $request = $this->httpClient->post($this->url, NULL, $data, $options);
+        $request->getCurlOptions()
+            ->set('CURLOPT_FORBID_REUSE', TRUE)
+            ->set('CURLOPT_FRESH_CONNECT', TRUE);
 
-        curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 60 );
-        curl_setopt( $ch, CURLOPT_TIMEOUT, 60 );
+        $response = $request->send();
+        parse_str((string) $response->getBody(), $responseData);
 
-        curl_setopt( $ch, CURLOPT_SSLCERT, TODO );
-        curl_setopt( $ch, CURLOPT_CAINFO, TODO );
-
-        curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 1 );
-        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query($data) );
-
-        $responseText = curl_exec($ch);
-        $errorNumber = curl_errno( $ch );
-
-        curl_close( $ch );
-
-        return $responseText;
-
-
-        return $this->response = new Response($this, $data);
+        return $this->response = new Response($this, $responseData);
     }
 }

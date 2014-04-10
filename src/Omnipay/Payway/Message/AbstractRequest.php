@@ -33,4 +33,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->setParameter('merchant', $merchant);
     }
+
+    public function getCertificate()
+    {
+        return $this->getParameter('certificate');
+    }
+
+    public function setCertificate($certificate)
+    {
+        return $this->setParameter('certificate', $certificate);
+    }
 }

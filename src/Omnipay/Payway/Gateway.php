@@ -51,9 +51,14 @@ class Gateway extends AbstractGateway implements GatewayInterface
         return $this->setParameter('merchant', $merchant);
     }
 
-    public function authorize(array $parameters = array())
+    public function getCertificate()
     {
-        return $this->createRequest('\Omnipay\Payway\Message\AuthorizeRequest', $parameters);
+        return $this->getParameter('certificate');
+    }
+
+    public function setCertificate($certificate)
+    {
+        return $this->setParameter('certificate', $certificate);
     }
 
     public function purchase(array $parameters = array())

@@ -3,32 +3,27 @@
 namespace Omnipay\Payway\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
+use Omnipay\Common\Message\ResponseInterface;
 
-class Response extends AbstractResponse
+class Response extends AbstractResponse implements ResponseInterface
 {
     public function isSuccessful()
     {
-        return !isset($this->data['error']);
+        return $this->data['response_summaryCode'] == 0;
     }
 
-    //public function getTransactionReference()
-    //{
-        //if (isset($this->data['object']) && 'charge' === $this->data['object']) {
-            //return $this->data['id'];
-        //}
-    //}
+    public function isRedirect()
+    {
+        return FALSE;
+    }
 
-    //public function getCardReference()
-    //{
-        //if (isset($this->data['object']) && 'customer' === $this->data['object']) {
-            //return $this->data['id'];
-        //}
-    //}
+    public function getTransactionReference()
+    {
+        return $this->data['response_receiptNo'];
+    }
 
-    //public function getMessage()
-    //{
-        //if (!$this->isSuccessful()) {
-            //return $this->data['error']['message'];
-        //}
-    //}
+    public function getMessage()
+    {
+        return $this->data['response_text'];
+    }
 }

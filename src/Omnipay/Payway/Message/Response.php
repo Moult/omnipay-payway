@@ -26,4 +26,9 @@ class Response extends AbstractResponse implements ResponseInterface
     {
         return $this->data['response_text'];
     }
+
+    public function getResponseCode()
+    {
+        return $this->data['response_responseCode'];
+    }
 }

@@ -45,4 +45,5 @@ var_dump($response->isSuccessful());
 var_dump($response->isRedirect());
 var_dump($response->getTransactionReference());
 var_dump($response->getMessage());
+var_dump($response->getResponseCode());
 ```
